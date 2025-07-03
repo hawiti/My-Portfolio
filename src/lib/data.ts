@@ -36,7 +36,7 @@ export interface PortfolioData {
 
 export const initialData: PortfolioData = {
   name: "Alex Doe",
-  photoUrl: "https://placehold.co/400x400.png",
+  photoUrl: "https://placehold.co/600x800.png",
   title: "Full-Stack Developer & UI/UX Enthusiast",
   aboutMe: `I am a passionate full-stack developer with a keen eye for design and user experience. With a background in both front-end and back-end technologies, I enjoy building robust, scalable, and beautiful web applications from the ground up.
 

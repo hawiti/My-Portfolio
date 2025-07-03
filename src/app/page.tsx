@@ -1,18 +1,25 @@
+
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, Code, GraduationCap, Home, User, Settings } from "lucide-react";
+import { ArrowRight, Briefcase, Code, GraduationCap, Home, User, Settings, Loader2 } from "lucide-react";
 import { PortfolioData } from "@/lib/data";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 async function getPortfolioData(): Promise<PortfolioData | null> {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolio`, {
+        // Use a dynamic import for NEXT_PUBLIC_APP_URL to ensure it's available
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+        const res = await fetch(`${appUrl}/api/portfolio`, {
             cache: 'no-store',
         });
         if (!res.ok) {
-            console.error("Failed to fetch portfolio data, status:", res.status);
+            console.error("Failed to fetch portfolio data, status:", res.status, await res.text());
             return null;
         }
         return res.json();
@@ -24,10 +31,10 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
 
 function Header() {
   return (
-    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40">
+    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-full" />
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
           <span className="font-bold text-xl">VerdantView</span>
         </Link>
         <div className="flex items-center gap-4">
@@ -50,13 +57,63 @@ function Header() {
 }
 
 
-export default async function PortfolioPage() {
-  const portfolioData = await getPortfolioData();
+export default function PortfolioPage() {
+  const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getPortfolioData();
+      setPortfolioData(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6, ease: "easeOut" } 
+    }
+  };
+
+  const MotionSection = ({ children, id, className }: { children: React.ReactNode, id: string, className?: string }) => (
+    <motion.section
+      id={id}
+      className={`my-24 scroll-mt-24 ${className}`}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={sectionVariants}
+    >
+      {children}
+    </motion.section>
+  );
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-4 text-lg text-muted-foreground">Loading Portfolio...</span>
+      </div>
+    );
+  }
 
   if (!portfolioData) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-xl">Could not load portfolio. Please try again later.</div>
+      <div className="flex h-screen items-center justify-center text-center p-4">
+        <div>
+          <h2 className="text-2xl font-bold text-destructive mb-4">Could not load portfolio.</h2>
+          <p className="text-muted-foreground">Please ensure the server is running and the database is seeded correctly.</p>
+           <Link href="/admin">
+            <Button className="mt-6">
+              <Settings className="mr-2 h-4 w-4" />
+              Go to Admin to configure
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -67,97 +124,118 @@ export default async function PortfolioPage() {
     <div className="bg-background text-foreground">
       <Header />
       <main className="container mx-auto px-4 md:px-6 py-12">
-        <section id="hero" className="flex flex-col md:flex-row items-center gap-12 my-12 md:my-24">
-          <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-primary">
-            <Image
-              src={photoUrl}
-              alt={name}
-              layout="fill"
-              objectFit="cover"
-              data-ai-hint="professional photo"
-            />
+        <motion.section 
+          id="hero"
+          className="my-12 md:my-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12 items-center">
+            <div className="md:col-span-1 lg:col-span-2">
+              <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
+                <Image
+                  src={photoUrl}
+                  alt={name}
+                  fill
+                  style={{objectFit: "cover"}}
+                  priority
+                  data-ai-hint="professional photo"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+            </div>
+            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary">{name}</h1>
+              <p className="text-xl md:text-2xl mt-4 text-muted-foreground font-light">{title}</p>
+              <p className="mt-6 max-w-2xl text-lg text-foreground/80 leading-relaxed">{summary}</p>
+            </div>
           </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary">{name}</h1>
-            <p className="text-xl md:text-2xl mt-2 text-muted-foreground">{title}</p>
-            <p className="mt-4 max-w-2xl text-lg">{summary}</p>
-          </div>
-        </section>
+        </motion.section>
 
-        <section id="about" className="my-24 scroll-mt-24">
+        <MotionSection id="about">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-accent w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto shadow-lg">
             <CardContent>
-              <p className="text-lg leading-relaxed whitespace-pre-wrap">{aboutMe}</p>
+              <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
           </Card>
-        </section>
+        </MotionSection>
 
-        <section id="skills" className="my-24">
+        <MotionSection id="skills">
            <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <Code className="text-accent w-8 h-8" /> Skills
           </h2>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
             {skills.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-lg py-2 px-4 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <Badge key={index} variant="secondary" className="text-lg py-2 px-4 rounded-full bg-primary/10 text-primary border border-primary/20 transition-transform hover:scale-105">
                 {skill}
               </Badge>
             ))}
           </div>
-        </section>
+        </MotionSection>
 
-        <section id="projects" className="my-24 scroll-mt-24">
+        <MotionSection id="projects">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <Home className="text-accent w-8 h-8" /> Projects
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project) => (
-              <Card key={project.id} className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg hover:shadow-2xl">
-                <Image
-                  src={project.imageUrl}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="w-full h-48 object-cover"
-                  data-ai-hint="project technology"
-                />
-                <CardHeader>
-                  <CardTitle>{project.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{project.description}</CardDescription>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.tags.map((tag, i) => (
-                      <Badge key={i} variant="outline">{tag}</Badge>
-                    ))}
-                  </div>
-                  {project.link && (
-                    <Button asChild variant="link" className="p-0 h-auto mt-4 text-primary">
-                      <a href={project.link} target="_blank" rel="noopener noreferrer">
-                        View Project <ArrowRight className="ml-2 h-4 w-4" />
-                      </a>
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+            {projects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 50}}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg hover:shadow-2xl h-full flex flex-col">
+                    <div className="relative w-full h-48">
+                        <Image
+                        src={project.imageUrl}
+                        alt={project.title}
+                        fill
+                        style={{objectFit:"cover"}}
+                        className="w-full h-48 object-cover"
+                        data-ai-hint="project technology"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                        <CardTitle>{project.title}</CardTitle>
+                        <CardDescription className="mt-2 flex-grow">{project.description}</CardDescription>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            {project.tags.map((tag, i) => (
+                            <Badge key={i} variant="outline">{tag}</Badge>
+                            ))}
+                        </div>
+                        {project.link && (
+                            <Button asChild variant="link" className="p-0 h-auto mt-4 text-primary self-start">
+                            <a href={project.link} target="_blank" rel="noopener noreferrer">
+                                View Project <ArrowRight className="ml-2 h-4 w-4" />
+                            </a>
+                            </Button>
+                        )}
+                    </div>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </MotionSection>
         
-        <section id="experience" className="my-24 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+        <MotionSection id="experience">
+          <h2 className="text-3xl font-bold text-center mb-16 flex items-center justify-center gap-3">
             <Briefcase className="text-accent w-8 h-8" /> Work Experience
           </h2>
-          <div className="relative pl-8 border-l-2 border-primary">
+          <div className="relative pl-8 border-l-2 border-primary max-w-3xl mx-auto">
             {experiences.map((exp) => (
               <div key={exp.id} className="mb-12 relative">
-                <div className="absolute -left-[42px] top-1 w-6 h-6 bg-primary rounded-full border-4 border-background" />
+                <div className="absolute -left-[42px] top-1 w-6 h-6 bg-primary rounded-full border-4 border-background ring-4 ring-primary/20" />
                 <p className="text-sm text-muted-foreground">{exp.period}</p>
                 <h3 className="text-xl font-bold mt-1">{exp.role}</h3>
                 <h4 className="text-lg text-primary">{exp.company}</h4>
-                <ul className="mt-2 list-disc list-inside text-muted-foreground">
+                <ul className="mt-2 list-disc list-inside text-muted-foreground space-y-1">
                   {exp.responsibilities.map((resp, i) => (
                     <li key={i}>{resp}</li>
                   ))}
@@ -165,15 +243,15 @@ export default async function PortfolioPage() {
               </div>
             ))}
           </div>
-        </section>
+        </MotionSection>
         
-        <section id="education" className="my-24 scroll-mt-24">
+        <MotionSection id="education">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <GraduationCap className="text-accent w-8 h-8" /> Education
           </h2>
-          <div className="space-y-8">
+          <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id}>
+              <Card key={edu.id} className="hover:border-primary/50 transition-colors duration-300">
                 <CardHeader>
                   <CardTitle>{edu.institution}</CardTitle>
                   <CardDescription>{edu.degree}</CardDescription>
@@ -182,10 +260,10 @@ export default async function PortfolioPage() {
               </Card>
             ))}
           </div>
-        </section>
+        </MotionSection>
 
       </main>
-      <footer className="bg-secondary">
+      <footer className="bg-muted">
         <div className="container mx-auto px-4 md:px-6 py-8 text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
         </div>
