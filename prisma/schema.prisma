@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,7 +10,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// A single portfolio record will exist with id = 1
 model Portfolio {
-  id   Int @id
-  data Json
+  id          Int          @id
+  name        String
+  photoUrl    String
+  title       String
+  aboutMe     String       @db.Text
+  summary     String       @db.Text
+  skills      Skill[]
+  projects    Project[]
+  experiences Experience[]
+  educations  Education[]
+}
+
+model Skill {
+  id          Int       @id @default(autoincrement())
+  name        String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId Int
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String    @db.Text
+  imageUrl    String
+  link        String
+  tags        String[]
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId Int
+}
+
+model Experience {
+  id               Int       @id @default(autoincrement())
+  role             String
+  company          String
+  period           String
+  responsibilities String[]
+  portfolio        Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId      Int
+}
+
+model Education {
+  id          Int       @id @default(autoincrement())
+  institution String
+  degree      String
+  period      String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId Int
 }
