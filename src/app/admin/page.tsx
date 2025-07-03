@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useTransition } from 'react';
-import { usePortfolio } from '@/hooks/use-portfolio';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,30 +11,62 @@ import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
 import { generateSummaryAction } from './actions';
 import { PlusCircle, Trash2, ArrowLeft, Wand2, Loader2 } from 'lucide-react';
-import { PortfolioData, Project, Experience, Education } from '@/lib/data';
+import { PortfolioData, Project, Experience, Education, initialData } from '@/lib/data';
 import Link from 'next/link';
 
 export default function AdminPage() {
-  const { portfolioData, updatePortfolioData } = usePortfolio();
-  const [formData, setFormData] = useState<PortfolioData>(portfolioData);
+  const [formData, setFormData] = useState<PortfolioData>(initialData);
+  const [loading, setLoading] = useState(true);
   const [isAiPending, startAiTransition] = useTransition();
   const { toast } = useToast();
 
   useEffect(() => {
-    setFormData(portfolioData);
-  }, [portfolioData]);
+    async function fetchData() {
+        try {
+            const res = await fetch('/api/portfolio');
+            if (!res.ok) throw new Error("Failed to fetch data");
+            const data = await res.json();
+            setFormData(data);
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: "Error",
+                description: "Could not load portfolio data.",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+    fetchData();
+  }, [toast]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    updatePortfolioData(formData);
-    toast({
-      title: "Success!",
-      description: "Your portfolio has been updated.",
-    });
+  const handleSave = async () => {
+    try {
+        const res = await fetch('/api/portfolio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+        });
+        if (!res.ok) throw new Error("Failed to save data");
+
+        toast({
+            title: "Success!",
+            description: "Your portfolio has been updated.",
+        });
+    } catch (error) {
+        console.error(error);
+        toast({
+            title: "Error",
+            description: "Could not save portfolio data.",
+            variant: "destructive",
+        });
+    }
   };
 
   const handleGenerateSummary = () => {
@@ -124,6 +155,15 @@ export default function AdminPage() {
     updatedExperiences[expIndex].responsibilities = updatedExperiences[expIndex].responsibilities.filter((_, i) => i !== respIndex);
     setFormData(prev => ({...prev, experiences: updatedExperiences}));
   };
+
+  if (loading) {
+    return (
+        <div className="flex h-screen items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span className="ml-4 text-lg">Loading Admin...</span>
+        </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-muted/40">

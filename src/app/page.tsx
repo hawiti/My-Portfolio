@@ -1,12 +1,26 @@
-"use client";
-
-import { usePortfolio } from "@/hooks/use-portfolio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, Code, GraduationCap, Home, User, Mail, Phone, Settings } from "lucide-react";
+import { ArrowRight, Briefcase, Code, GraduationCap, Home, User, Settings } from "lucide-react";
+import { PortfolioData } from "@/lib/data";
+
+async function getPortfolioData(): Promise<PortfolioData | null> {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/portfolio`, {
+            cache: 'no-store',
+        });
+        if (!res.ok) {
+            console.error("Failed to fetch portfolio data, status:", res.status);
+            return null;
+        }
+        return res.json();
+    } catch (error) {
+        console.error("Error fetching portfolio data:", error);
+        return null;
+    }
+}
 
 function Header() {
   return (
@@ -36,13 +50,13 @@ function Header() {
 }
 
 
-export default function PortfolioPage() {
-  const { portfolioData } = usePortfolio();
+export default async function PortfolioPage() {
+  const portfolioData = await getPortfolioData();
 
   if (!portfolioData) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-xl">Loading Portfolio...</div>
+        <div className="text-xl">Could not load portfolio. Please try again later.</div>
       </div>
     );
   }
