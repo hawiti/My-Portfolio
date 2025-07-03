@@ -21,11 +21,14 @@ export async function GET() {
         });
     }
 
-    return NextResponse.json(portfolioRecord.data);
+    // Prisma's `Json` type is typed as `JsonValue`. We cast it to our `PortfolioData` type.
+    const portfolioData = portfolioRecord.data as PortfolioData;
+
+    return NextResponse.json(portfolioData);
   } catch (error) {
     console.error('Error fetching portfolio from database:', error);
     return NextResponse.json(
-        {message: 'Error fetching portfolio from database'},
+        {message: 'Error fetching portfolio from database', error: (error as Error).message },
         {status: 500}
     );
   }
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error writing to database:', error);
     return NextResponse.json(
-      {message: 'Error updating portfolio'},
+      {message: 'Error updating portfolio', error: (error as Error).message },
       {status: 500}
     );
   }
