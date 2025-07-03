@@ -1,7 +1,3 @@
-import { pgTable, serial, jsonb, integer } from 'drizzle-orm/pg-core';
-import type { PortfolioData } from '@/lib/data';
-
-export const portfolios = pgTable('portfolios', {
-  id: integer('id').primaryKey(),
-  data: jsonb('data').$type<PortfolioData>().notNull(),
-});
+// This file is no longer used since the project was migrated to Prisma.
+// The schema is now defined in /prisma/schema.prisma.
+// This file can be safely deleted.
