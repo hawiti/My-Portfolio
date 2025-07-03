@@ -1,14 +1,15 @@
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { createPool } from '@vercel/postgres';
-import * as schema from './schema';
+import { PrismaClient } from '@prisma/client'
 
-if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL environment variable is not set');
+const prismaClientSingleton = () => {
+  return new PrismaClient()
 }
 
-const pool = createPool({
-    connectionString: process.env.DATABASE_URL,
-});
+declare global {
+  var prisma: undefined | ReturnType<typeof prismaClientSingleton>
+}
 
-// Connect to Vercel Postgres
-export const db = drizzle(pool, { schema });
+const db = globalThis.prisma ?? prismaClientSingleton()
+
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = db
+
+export { db }
