@@ -11,4 +11,4 @@ const pool = createPool({
 });
 
 // Connect to Vercel Postgres
-export const db
+export const db = drizzle(pool, { schema });

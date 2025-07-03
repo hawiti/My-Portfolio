@@ -16,14 +16,19 @@ export async function GET() {
         // If no data, seed the database with initial data
         console.log("No portfolio found, seeding database with initial data.");
         const seededData = await db.insert(portfolios).values({ data: initialData, id: 1 }).returning();
+        if (!seededData || seededData.length === 0) {
+            throw new Error("Failed to seed database.");
+        }
         portfolioRecord = seededData[0];
     }
 
     return NextResponse.json(portfolioRecord.data);
   } catch (error) {
-    console.error('Error fetching from database, returning initial data as fallback:', error);
-    // As a fallback for UI to not break, return initial data.
-    return NextResponse.json(initialData);
+    console.error('Error fetching portfolio from database:', error);
+    return NextResponse.json(
+        {message: 'Error fetching portfolio from database'},
+        {status: 500}
+    );
   }
 }
 
