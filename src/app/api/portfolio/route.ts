@@ -1,27 +1,21 @@
 'use server';
 
 import {NextResponse} from 'next/server';
-import {initialData, PortfolioData} from '@/lib/data';
+import {PortfolioData} from '@/lib/data';
 import { db } from '@/lib/db';
 
 export async function GET() {
   try {
-    let portfolioRecord = await db.portfolio.findUnique({
+    // We always look for the single portfolio record with ID 1.
+    const portfolioRecord = await db.portfolio.findUnique({
         where: { id: 1 }
     });
 
     if (!portfolioRecord) {
-        // If no data, seed the database with initial data
-        console.log("No portfolio found, seeding database with initial data.");
-        portfolioRecord = await db.portfolio.create({
-            data: {
-                id: 1,
-                data: initialData
-            }
-        });
+        // If no data is found, it means the database hasn't been seeded yet.
+        return NextResponse.json({message: 'Portfolio not found. Please seed the database.'}, {status: 404});
     }
 
-    // Prisma's `Json` type is typed as `JsonValue`. We cast it to our `PortfolioData` type.
     const portfolioData = portfolioRecord.data as PortfolioData;
 
     return NextResponse.json(portfolioData);
@@ -44,6 +38,8 @@ export async function POST(request: Request) {
       );
     }
     
+    // Upsert ensures that we update the record with ID 1 if it exists,
+    // or create it if it doesn't.
     await db.portfolio.upsert({
         where: { id: 1 },
         update: { data: newData },
