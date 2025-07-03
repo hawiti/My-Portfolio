@@ -1,0 +1,112 @@
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+  tags: string[];
+}
+
+export interface Experience {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  responsibilities: string[];
+}
+
+export interface Education {
+  id: string;
+  institution: string;
+  degree: string;
+  period: string;
+}
+
+export interface PortfolioData {
+  name: string;
+  photoUrl: string;
+  title: string;
+  aboutMe: string;
+  summary: string;
+  skills: string[];
+  projects: Project[];
+  experiences: Experience[];
+  educations: Education[];
+}
+
+export const initialData: PortfolioData = {
+  name: "Alex Doe",
+  photoUrl: "https://placehold.co/400x400.png",
+  title: "Full-Stack Developer & UI/UX Enthusiast",
+  aboutMe: `I am a passionate full-stack developer with a keen eye for design and user experience. With a background in both front-end and back-end technologies, I enjoy building robust, scalable, and beautiful web applications from the ground up.
+
+My journey in tech started with a curiosity for how things work, which quickly evolved into a full-fledged passion for coding and problem-solving. I thrive in collaborative environments and am always eager to learn new technologies and methodologies.
+
+When I'm not coding, you can find me exploring the latest design trends, contributing to open-source projects, or hiking in the great outdoors.`,
+  summary: "A dynamic Full-Stack Developer with a flair for creating intuitive user experiences. Proficient in modern web technologies and dedicated to building high-quality applications.",
+  skills: ["React", "Next.js", "TypeScript", "Node.js", "GraphQL", "PostgreSQL", "Docker", "Figma", "UI/UX Design"],
+  projects: [
+    {
+      id: "1",
+      title: "E-Commerce Platform",
+      description: "A feature-rich e-commerce site with a custom CMS, payment gateway integration, and a responsive design optimized for all devices.",
+      imageUrl: "https://placehold.co/600x400.png",
+      link: "#",
+      tags: ["Next.js", "Stripe", "GraphQL", "Tailwind CSS"],
+    },
+    {
+      id: "2",
+      title: "Project Management Tool",
+      description: "A collaborative tool for teams to manage tasks, track progress, and communicate effectively, featuring real-time updates.",
+      imageUrl: "https://placehold.co/600x400.png",
+      link: "#",
+      tags: ["React", "Firebase", "Real-time DB", "Material UI"],
+    },
+    {
+      id: "3",
+      title: "Personal Blog",
+      description: "A sleek and modern blog built with a headless CMS for easy content management and a fast, static front-end for optimal performance.",
+      imageUrl: "https://placehold.co/600x400.png",
+      link: "#",
+      tags: ["Gatsby", "Contentful", "Styled Components"],
+    },
+  ],
+  experiences: [
+    {
+      id: "1",
+      role: "Senior Software Engineer",
+      company: "Tech Solutions Inc.",
+      period: "Jan 2021 - Present",
+      responsibilities: [
+        "Led the development of a new client-facing analytics dashboard.",
+        "Mentored junior developers and conducted code reviews.",
+        "Architected and implemented a new microservices-based backend.",
+      ],
+    },
+    {
+      id: "2",
+      role: "Full-Stack Developer",
+      company: "Innovate Co.",
+      period: "Jun 2018 - Dec 2020",
+      responsibilities: [
+        "Developed and maintained web applications using React and Node.js.",
+        "Collaborated with designers to create responsive and user-friendly interfaces.",
+        "Improved application performance by 30% through code optimization.",
+      ],
+    },
+  ],
+  educations: [
+    {
+      id: "1",
+      institution: "State University",
+      degree: "B.S. in Computer Science",
+      period: "2014 - 2018",
+    },
+    {
+        id: "2",
+        institution: "Code Academy",
+        degree: "Full-Stack Web Development Bootcamp",
+        period: "2018",
+    }
+  ],
+};
