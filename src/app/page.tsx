@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 
 async function getPortfolioData(): Promise<PortfolioData | null> {
     try {
-        // Use a dynamic import for NEXT_PUBLIC_APP_URL to ensure it's available
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
         const res = await fetch(`${appUrl}/api/portfolio`, {
             cache: 'no-store',
@@ -31,21 +30,21 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
 
 function Header() {
   return (
-    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 border-b">
+    <header className="bg-gray-900 sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
-          <span className="font-bold text-xl">VerdantView</span>
+          <span className="font-bold text-xl text-white">VerdantView</span>
         </Link>
         <div className="flex items-center gap-4">
           <nav className="hidden md:flex gap-6 text-sm font-medium">
-            <a href="#about" className="hover:text-primary transition-colors">About</a>
-            <a href="#projects" className="hover:text-primary transition-colors">Projects</a>
-            <a href="#experience" className="hover:text-primary transition-colors">Experience</a>
-            <a href="#education" className="hover:text-primary transition-colors">Education</a>
+            <a href="#about" className="text-gray-300 hover:text-primary transition-colors">About</a>
+            <a href="#projects" className="text-gray-300 hover:text-primary transition-colors">Projects</a>
+            <a href="#experience" className="text-gray-300 hover:text-primary transition-colors">Experience</a>
+            <a href="#education" className="text-gray-300 hover:text-primary transition-colors">Education</a>
           </nav>
           <Link href="/admin">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-primary hover:border-primary">
               <Settings className="mr-2 h-4 w-4" />
               Manage
             </Button>
@@ -131,21 +130,19 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12">
-            <div className="md:col-span-1 lg:col-span-2">
-              <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
-                <Image
-                  src={photoUrl}
-                  alt={name}
-                  fill
-                  style={{objectFit: "cover"}}
-                  priority
-                  data-ai-hint="professional photo"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
+              <Image
+                src={photoUrl}
+                alt={name}
+                fill
+                style={{objectFit: "cover"}}
+                priority
+                data-ai-hint="professional photo"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
-            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl flex flex-col justify-center">
+            <div className="bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl flex flex-col justify-center">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
               <p className="mt-6 max-w-2xl text-lg text-gray-300 leading-relaxed">{summary}</p>
@@ -263,8 +260,8 @@ export default function PortfolioPage() {
         </MotionSection>
 
       </main>
-      <footer className="bg-muted">
-        <div className="container mx-auto px-4 md:px-6 py-8 text-center text-muted-foreground">
+      <footer className="bg-gray-900">
+        <div className="container mx-auto px-4 md:px-6 py-8 text-center text-gray-400">
           <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
         </div>
       </footer>
