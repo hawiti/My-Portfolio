@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Match all paths under /admin
+// Match '/admin' and all paths under it
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin', '/admin/:path*'],
 };
