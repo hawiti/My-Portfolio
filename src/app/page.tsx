@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, Code, GraduationCap, LayoutGrid, User, Settings, Loader2 } from "lucide-react";
+import { ArrowRight, Briefcase, Code, GraduationCap, LayoutGrid, User, Loader2 } from "lucide-react";
 import { PortfolioData } from "@/lib/data";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -44,12 +44,6 @@ function Header() {
                 <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
                 <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
             </nav>
-            <Link href="/admin">
-                <Button variant="outline" size="sm">
-                <Settings className="mr-2 h-4 w-4" />
-                Manage
-                </Button>
-            </Link>
             </div>
         </div>
         </header>
@@ -108,12 +102,6 @@ export default function PortfolioPage() {
         <div>
           <h2 className="text-2xl font-bold text-destructive mb-4">Could not load portfolio.</h2>
           <p className="text-muted-foreground">Please ensure the server is running and the database is seeded correctly.</p>
-           <Link href="/admin">
-            <Button className="mt-6">
-              <Settings className="mr-2 h-4 w-4" />
-              Go to Admin to configure
-            </Button>
-          </Link>
         </div>
       </div>
     );
@@ -156,7 +144,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left break-words">{aboutMe}</p>
             </CardContent>
@@ -253,6 +241,7 @@ export default function PortfolioPage() {
               <Card key={edu.id} className="bg-card transition-all">
                 <CardHeader>
                   <CardTitle className="text-card-foreground">{edu.institution}</CardTitle>
+
                   <CardDescription className="text-muted-foreground">{edu.degree}</CardDescription>
                   <p className="text-sm text-muted-foreground pt-2">{edu.period}</p>
                 </CardHeader>
@@ -272,5 +261,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-
-    
