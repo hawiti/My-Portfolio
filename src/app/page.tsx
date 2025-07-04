@@ -147,7 +147,7 @@ export default function PortfolioPage() {
             <div className="p-8 lg:p-12 flex flex-col justify-center">
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-primary font-light">{title}</p>
-              <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{summary}</p>
+              <p className="mt-6 text-lg text-muted-foreground leading-relaxed break-words">{summary}</p>
             </div>
           </div>
         </motion.section>
@@ -158,7 +158,7 @@ export default function PortfolioPage() {
           </h2>
           <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
             <CardContent>
-              <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
+              <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left break-words">{aboutMe}</p>
             </CardContent>
           </Card>
         </MotionSection>
@@ -203,7 +203,7 @@ export default function PortfolioPage() {
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
                         <CardTitle className="text-card-foreground">{project.title}</CardTitle>
-                        <CardDescription className="mt-2 flex-grow text-muted-foreground">{project.description}</CardDescription>
+                        <CardDescription className="mt-2 flex-grow text-muted-foreground break-words">{project.description}</CardDescription>
                         <div className="mt-4 flex flex-wrap gap-2">
                             {project.tags.map((tag, i) => (
                             <Badge key={i} variant="secondary">{tag}</Badge>
@@ -236,7 +236,7 @@ export default function PortfolioPage() {
                 <h4 className="text-lg text-primary">{exp.company}</h4>
                 <ul className="mt-2 list-disc list-inside text-muted-foreground space-y-1">
                   {exp.responsibilities.map((resp, i) => (
-                    <li key={i}>{resp}</li>
+                    <li key={i} className="break-words">{resp}</li>
                   ))}
                 </ul>
               </div>
@@ -272,3 +272,5 @@ export default function PortfolioPage() {
     </div>
   );
 }
+
+    
