@@ -122,15 +122,15 @@ export default function PortfolioPage() {
   return (
     <div className="bg-background text-foreground">
       <Header />
-      <main className="container mx-auto px-4 md:px-6 py-12">
+      <main className="container mx-auto px-4 md:px-6">
         <motion.section 
           id="hero"
-          className="my-12"
+          className="my-8 max-w-5xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
@@ -142,10 +142,10 @@ export default function PortfolioPage() {
                 sizes="(max-width: 768px) 100vw, 512px"
               />
             </div>
-            <div className="bg-gray-900 p-8 lg:p-12 flex flex-col justify-center">
-              <h1 className="text-4xl sm:text-5xl font-bold text-white">{name}</h1>
+            <div className="p-8 lg:p-12 flex flex-col justify-center">
+              <h1 className="text-4xl sm:text-5xl font-bold text-foreground">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
-              <p className="mt-6 text-lg text-gray-300 leading-relaxed">{summary}</p>
+              <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{summary}</p>
             </div>
           </div>
         </motion.section>
