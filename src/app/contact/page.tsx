@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,7 +51,7 @@ function Header() {
 }
 
 export default function ContactPage() {
-  const [state, formAction] = useFormState(contactAction, initialState);
+  const [state, formAction] = useActionState(contactAction, initialState);
 
   return (
     <div className="bg-background text-foreground min-h-screen">
