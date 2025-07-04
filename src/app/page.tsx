@@ -30,21 +30,21 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
 
 function Header() {
   return (
-    <header className="bg-gray-900 sticky top-0 z-50">
+    <header className="bg-background/70 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
-          <span className="font-bold text-xl text-white">VerdantView</span>
+          <span className="font-bold text-xl text-foreground">VerdantView</span>
         </Link>
         <div className="flex items-center gap-4">
           <nav className="hidden md:flex gap-6 text-sm font-medium">
-            <a href="#about" className="text-gray-300 hover:text-primary transition-colors">About</a>
-            <a href="#projects" className="text-gray-300 hover:text-primary transition-colors">Projects</a>
-            <a href="#experience" className="text-gray-300 hover:text-primary transition-colors">Experience</a>
-            <a href="#education" className="text-gray-300 hover:text-primary transition-colors">Education</a>
+            <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a>
+            <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
+            <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
+            <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
           </nav>
           <Link href="/admin">
-            <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-primary hover:border-primary">
+            <Button variant="outline" size="sm">
               <Settings className="mr-2 h-4 w-4" />
               Manage
             </Button>
@@ -125,12 +125,12 @@ export default function PortfolioPage() {
       <main className="container mx-auto px-4 md:px-6">
         <motion.section 
           id="hero"
-          className="my-8 max-w-5xl mx-auto"
+          className="my-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-secondary/50 backdrop-blur-sm border border-primary/20 shadow-xl shadow-primary/10">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
@@ -144,7 +144,7 @@ export default function PortfolioPage() {
             </div>
             <div className="p-8 lg:p-12 flex flex-col justify-center">
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground">{name}</h1>
-              <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
+              <p className="text-xl md:text-2xl mt-4 text-primary font-light">{title}</p>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{summary}</p>
             </div>
           </div>
@@ -152,9 +152,9 @@ export default function PortfolioPage() {
 
         <MotionSection id="about">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            <User className="text-accent w-8 h-8" /> About Me
+            <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8 max-w-4xl mx-auto shadow-lg">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-secondary/50 backdrop-blur-sm border border-border/10 rounded-2xl shadow-lg">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
@@ -163,7 +163,7 @@ export default function PortfolioPage() {
 
         <MotionSection id="skills">
            <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            <Code className="text-accent w-8 h-8" /> Skills
+            <Code className="text-primary w-8 h-8" /> Skills
           </h2>
           <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
             {skills.map((skill, index) => (
@@ -176,7 +176,7 @@ export default function PortfolioPage() {
 
         <MotionSection id="projects">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            <Home className="text-accent w-8 h-8" /> Projects
+            <Home className="text-primary w-8 h-8" /> Projects
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, i) => (
@@ -187,7 +187,7 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 shadow-lg hover:shadow-2xl h-full flex flex-col">
+                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-secondary/50 backdrop-blur-sm border border-border/10 rounded-lg">
                     <div className="relative w-full h-48">
                         <Image
                         src={project.imageUrl}
@@ -223,9 +223,9 @@ export default function PortfolioPage() {
         
         <MotionSection id="experience">
           <h2 className="text-3xl font-bold text-center mb-16 flex items-center justify-center gap-3">
-            <Briefcase className="text-accent w-8 h-8" /> Work Experience
+            <Briefcase className="text-primary w-8 h-8" /> Work Experience
           </h2>
-          <div className="relative pl-8 border-l-2 border-primary max-w-3xl mx-auto">
+          <div className="relative pl-8 border-l-2 border-border/50 max-w-3xl mx-auto">
             {experiences.map((exp) => (
               <div key={exp.id} className="mb-12 relative">
                 <div className="absolute -left-[42px] top-1 w-6 h-6 bg-primary rounded-full border-4 border-background ring-4 ring-primary/20" />
@@ -244,11 +244,11 @@ export default function PortfolioPage() {
         
         <MotionSection id="education">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            <GraduationCap className="text-accent w-8 h-8" /> Education
+            <GraduationCap className="text-primary w-8 h-8" /> Education
           </h2>
           <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id} className="hover:border-primary/50 transition-colors duration-300">
+              <Card key={edu.id} className="bg-secondary/50 backdrop-blur-sm border border-border/10 transition-all hover:border-primary/50">
                 <CardHeader>
                   <CardTitle>{edu.institution}</CardTitle>
                   <CardDescription>{edu.degree}</CardDescription>
@@ -260,8 +260,8 @@ export default function PortfolioPage() {
         </MotionSection>
 
       </main>
-      <footer className="bg-gray-900">
-        <div className="container mx-auto px-4 md:px-6 py-8 text-center text-gray-400">
+      <footer className="bg-background/70 backdrop-blur-sm">
+        <div className="container mx-auto px-4 md:px-6 py-8 text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
         </div>
       </footer>
