@@ -43,6 +43,7 @@ function Header() {
                 <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
                 <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
                 <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
+                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
             </nav>
             </div>
         </div>
