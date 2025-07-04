@@ -30,28 +30,30 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
 
 function Header() {
   return (
-    <header className="bg-background/70 backdrop-blur-sm sticky top-0 z-50">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
-          <span className="font-bold text-xl text-foreground">VerdantView</span>
-        </Link>
-        <div className="flex items-center gap-4">
-          <nav className="hidden md:flex gap-6 text-sm font-medium">
-            <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a>
-            <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
-            <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
-            <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
-          </nav>
-          <Link href="/admin">
-            <Button variant="outline" size="sm">
-              <Settings className="mr-2 h-4 w-4" />
-              Manage
-            </Button>
-          </Link>
+    <div className="dark">
+        <header className="bg-background/70 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+            <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
+            <span className="font-bold text-xl text-foreground">VerdantView</span>
+            </Link>
+            <div className="flex items-center gap-4">
+            <nav className="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a>
+                <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
+                <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
+                <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
+            </nav>
+            <Link href="/admin">
+                <Button variant="outline" size="sm">
+                <Settings className="mr-2 h-4 w-4" />
+                Manage
+                </Button>
+            </Link>
+            </div>
         </div>
-      </div>
-    </header>
+        </header>
+    </div>
   );
 }
 
@@ -130,19 +132,19 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-card shadow-xl shadow-primary/10">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
                 alt={name}
                 fill
-                className="object-cover"
+                className="object-cover rounded-l-2xl"
                 priority
                 data-ai-hint="professional photo"
                 sizes="(max-width: 768px) 100vw, 512px"
               />
             </div>
-            <div className="p-8 lg:p-12 flex flex-col justify-center">
+            <div className="p-8 lg:p-12 flex flex-col justify-center bg-card rounded-r-2xl">
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-primary font-light">{title}</p>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{summary}</p>
@@ -154,7 +156,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
+          <Card className="dark p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
@@ -187,7 +189,7 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-card rounded-lg">
+                <Card className="dark overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-card rounded-lg">
                     <div className="relative w-full h-48">
                         <Image
                         src={project.imageUrl}
@@ -200,11 +202,11 @@ export default function PortfolioPage() {
                         />
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
-                        <CardTitle>{project.title}</CardTitle>
-                        <CardDescription className="mt-2 flex-grow">{project.description}</CardDescription>
+                        <CardTitle className="text-card-foreground">{project.title}</CardTitle>
+                        <CardDescription className="mt-2 flex-grow text-muted-foreground">{project.description}</CardDescription>
                         <div className="mt-4 flex flex-wrap gap-2">
                             {project.tags.map((tag, i) => (
-                            <Badge key={i} variant="outline">{tag}</Badge>
+                            <Badge key={i} variant="secondary">{tag}</Badge>
                             ))}
                         </div>
                         {project.link && (
@@ -248,10 +250,10 @@ export default function PortfolioPage() {
           </h2>
           <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id} className="bg-card transition-all">
+              <Card key={edu.id} className="dark bg-card transition-all">
                 <CardHeader>
-                  <CardTitle>{edu.institution}</CardTitle>
-                  <CardDescription>{edu.degree}</CardDescription>
+                  <CardTitle className="text-card-foreground">{edu.institution}</CardTitle>
+                  <CardDescription className="text-muted-foreground">{edu.degree}</CardDescription>
                   <p className="text-sm text-muted-foreground pt-2">{edu.period}</p>
                 </CardHeader>
               </Card>
@@ -260,11 +262,13 @@ export default function PortfolioPage() {
         </MotionSection>
 
       </main>
-      <footer className="bg-background/70 backdrop-blur-sm">
-        <div className="container mx-auto px-4 md:px-6 py-8 text-center text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
-        </div>
-      </footer>
+      <div className="dark">
+        <footer className="bg-background/70 backdrop-blur-sm">
+            <div className="container mx-auto px-4 md:px-6 py-8 text-center text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+            </div>
+        </footer>
+      </div>
     </div>
   );
 }
