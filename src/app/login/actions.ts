@@ -4,11 +4,12 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function loginAction(prevState: { message: string }, formData: FormData) {
+  const email = formData.get('email');
   const password = formData.get('password');
 
   // This is a simple authentication for demonstration purposes.
   // In a real application, use a proper authentication library and hashed passwords.
-  if (password === process.env.ADMIN_PASSWORD) {
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     cookies().set('is_logged_in', 'true', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -17,6 +18,6 @@ export async function loginAction(prevState: { message: string }, formData: Form
     });
     redirect('/admin');
   } else {
-    return { message: 'Invalid password.' };
+    return { message: 'Invalid email or password.' };
   }
 }
