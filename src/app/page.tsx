@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, Code, GraduationCap, Home, User, Settings, Loader2 } from "lucide-react";
+import { ArrowRight, Briefcase, Code, GraduationCap, LayoutGrid, User, Settings, Loader2 } from "lucide-react";
 import { PortfolioData } from "@/lib/data";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
             return null;
         }
         return res.json();
-    } catch (error) {
+    } catch (error)
         console.error("Error fetching portfolio data:", error);
         return null;
     }
@@ -130,7 +130,7 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-secondary/50 backdrop-blur-sm border border-primary/20 shadow-xl shadow-primary/10">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-card/50 backdrop-blur-sm shadow-xl shadow-primary/10">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
@@ -154,7 +154,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-secondary/50 backdrop-blur-sm border border-border/10 rounded-2xl shadow-lg">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl shadow-lg">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
@@ -176,7 +176,7 @@ export default function PortfolioPage() {
 
         <MotionSection id="projects">
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            <Home className="text-primary w-8 h-8" /> Projects
+            <LayoutGrid className="text-primary w-8 h-8" /> Projects
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, i) => (
@@ -187,7 +187,7 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-secondary/50 backdrop-blur-sm border border-border/10 rounded-lg">
+                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-card/50 backdrop-blur-sm rounded-lg">
                     <div className="relative w-full h-48">
                         <Image
                         src={project.imageUrl}
@@ -225,7 +225,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-16 flex items-center justify-center gap-3">
             <Briefcase className="text-primary w-8 h-8" /> Work Experience
           </h2>
-          <div className="relative pl-8 border-l-2 border-border/50 max-w-3xl mx-auto">
+          <div className="relative pl-8 border-l-2 border-primary/30 max-w-3xl mx-auto">
             {experiences.map((exp) => (
               <div key={exp.id} className="mb-12 relative">
                 <div className="absolute -left-[42px] top-1 w-6 h-6 bg-primary rounded-full border-4 border-background ring-4 ring-primary/20" />
@@ -248,7 +248,7 @@ export default function PortfolioPage() {
           </h2>
           <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id} className="bg-secondary/50 backdrop-blur-sm border border-border/10 transition-all hover:border-primary/50">
+              <Card key={edu.id} className="bg-card/50 backdrop-blur-sm transition-all">
                 <CardHeader>
                   <CardTitle>{edu.institution}</CardTitle>
                   <CardDescription>{edu.degree}</CardDescription>
