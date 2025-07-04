@@ -22,6 +22,13 @@ export interface Education {
   period: string;
 }
 
+export interface ContactInfo {
+  email?: string;
+  phone?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+}
+
 export interface PortfolioData {
   name: string;
   photoUrl: string;
@@ -32,6 +39,7 @@ export interface PortfolioData {
   projects: Project[];
   experiences: Experience[];
   educations: Education[];
+  contact?: ContactInfo;
 }
 
 export const initialData: PortfolioData = {
@@ -109,4 +117,10 @@ When I'm not coding, you can find me exploring the latest design trends, contrib
         period: "2018",
     }
   ],
+  contact: {
+    email: "alex.doe@example.com",
+    phone: "+1 123-456-7890",
+    linkedinUrl: "https://linkedin.com/in/alex-doe",
+    githubUrl: "https://github.com/alex-doe",
+  }
 };

@@ -25,6 +25,12 @@ function shapePortfolioData(
         projects: portfolio.projects.map((p) => ({ ...p, id: p.id.toString() })),
         experiences: portfolio.experiences.map((e) => ({ ...e, id: e.id.toString() })),
         educations: portfolio.educations.map((e) => ({ ...e, id: e.id.toString() })),
+        contact: {
+            email: portfolio.email ?? '',
+            phone: portfolio.phone ?? '',
+            linkedinUrl: portfolio.linkedinUrl ?? '',
+            githubUrl: portfolio.githubUrl ?? '',
+        }
     };
 }
 
@@ -63,14 +69,26 @@ export async function POST(request: Request) {
   try {
     const newData: PortfolioData = await request.json();
 
-    const { name, photoUrl, title, aboutMe, summary, skills, projects, experiences, educations } = newData;
+    const { name, photoUrl, title, aboutMe, summary, skills, projects, experiences, educations, contact } = newData;
 
     await db.$transaction(async (prisma) => {
         // 1. Upsert the main portfolio record
         const portfolio = await prisma.portfolio.upsert({
             where: { id: 1 },
-            update: { name, photoUrl, title, aboutMe, summary },
-            create: { id: 1, name, photoUrl, title, aboutMe, summary },
+            update: { 
+                name, photoUrl, title, aboutMe, summary,
+                email: contact?.email,
+                phone: contact?.phone,
+                linkedinUrl: contact?.linkedinUrl,
+                githubUrl: contact?.githubUrl,
+            },
+            create: { 
+                id: 1, name, photoUrl, title, aboutMe, summary,
+                email: contact?.email,
+                phone: contact?.phone,
+                linkedinUrl: contact?.linkedinUrl,
+                githubUrl: contact?.githubUrl,
+            },
         });
         const portfolioId = portfolio.id;
 

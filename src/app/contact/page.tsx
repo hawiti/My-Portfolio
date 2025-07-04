@@ -8,9 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, Send } from 'lucide-react';
+import { CheckCircle, Send, Mail, Phone, Linkedin, Github } from 'lucide-react';
 import Link from 'next/link';
 import { contactAction } from './actions';
+import { useEffect, useState } from 'react';
+import { PortfolioData } from '@/lib/data';
 
 const initialState = {
   message: '',
@@ -52,18 +54,70 @@ function Header() {
 
 export default function ContactPage() {
   const [state, formAction] = useActionState(contactAction, initialState);
+  const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
+
+  useEffect(() => {
+    async function getPortfolioData(): Promise<PortfolioData | null> {
+        try {
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+            const res = await fetch(`${appUrl}/api/portfolio`, {
+                cache: 'no-store',
+            });
+            if (!res.ok) {
+                console.error("Failed to fetch portfolio data, status:", res.status, await res.text());
+                return null;
+            }
+            return res.json();
+        } catch (error) {
+            console.error("Error fetching portfolio data:", error);
+            return null;
+        }
+    }
+    getPortfolioData().then(data => setPortfolioData(data));
+  }, []);
 
   return (
     <div className="bg-background text-foreground min-h-screen">
       <Header />
-      <main className="container mx-auto px-4 md:px-6 py-12">
-        <div className="flex items-center justify-center">
-          <Card className="w-full max-w-2xl bg-card">
+      <main className="container mx-auto px-4 md:px-6 py-12 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+          <div className="space-y-6">
+              <h1 className="text-4xl font-bold">Get In Touch</h1>
+              <p className="text-muted-foreground text-lg">
+                  I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Fill out the form, or reach out to me directly through the channels below.
+              </p>
+              {portfolioData?.contact && (
+                  <div className="space-y-4 pt-4">
+                      {portfolioData.contact.email && (
+                          <a href={`mailto:${portfolioData.contact.email}`} className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Mail className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>{portfolioData.contact.email}</span>
+                          </a>
+                      )}
+                      {portfolioData.contact.phone && (
+                          <div className="flex items-center gap-4 text-lg">
+                              <Phone className="w-6 h-6 text-primary" />
+                              <span>{portfolioData.contact.phone}</span>
+                          </div>
+                      )}
+                      {portfolioData.contact.linkedinUrl && (
+                          <a href={portfolioData.contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Linkedin className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>LinkedIn Profile</span>
+                          </a>
+                      )}
+                      {portfolioData.contact.githubUrl && (
+                           <a href={portfolioData.contact.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Github className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>GitHub Profile</span>
+                          </a>
+                      )}
+                  </div>
+              )}
+          </div>
+          <Card className="w-full bg-card">
             <CardHeader>
-              <CardTitle className="text-3xl">Contact Me</CardTitle>
-              <CardDescription>
-                Have a question or want to work together? Fill out the form below.
-              </CardDescription>
+              <CardTitle className="text-3xl">Send a Message</CardTitle>
             </CardHeader>
             <CardContent>
               {state.success ? (

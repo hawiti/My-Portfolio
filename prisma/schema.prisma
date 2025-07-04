@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// A single portfolio record will exist with id = 1
 model Portfolio {
-  id          Int          @id
+  id          Int      @id @default(1)
   name        String
   photoUrl    String
   title       String
-  aboutMe     String       @db.Text
-  summary     String       @db.Text
+  aboutMe     String   @db.Text
+  summary     String   @db.Text
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  githubUrl   String?
+
   skills      Skill[]
   projects    Project[]
   experiences Experience[]
@@ -27,7 +28,7 @@ model Portfolio {
 model Skill {
   id          Int       @id @default(autoincrement())
   name        String
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   portfolioId Int
 }
 
@@ -38,7 +39,7 @@ model Project {
   imageUrl    String
   link        String
   tags        String[]
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   portfolioId Int
 }
 
@@ -48,7 +49,7 @@ model Experience {
   company          String
   period           String
   responsibilities String[]
-  portfolio        Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio        Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   portfolioId      Int
 }
 
@@ -57,6 +58,6 @@ model Education {
   institution String
   degree      String
   period      String
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   portfolioId Int
 }

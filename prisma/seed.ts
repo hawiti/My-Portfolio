@@ -25,6 +25,10 @@ async function main() {
         title: initialData.title,
         aboutMe: initialData.aboutMe,
         summary: initialData.summary,
+        email: initialData.contact?.email,
+        phone: initialData.contact?.phone,
+        linkedinUrl: initialData.contact?.linkedinUrl,
+        githubUrl: initialData.contact?.githubUrl,
       },
     });
 
