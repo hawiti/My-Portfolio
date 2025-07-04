@@ -22,7 +22,7 @@ async function getPortfolioData(): Promise<PortfolioData | null> {
             return null;
         }
         return res.json();
-    } catch (error)
+    } catch (error) {
         console.error("Error fetching portfolio data:", error);
         return null;
     }
@@ -130,7 +130,7 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-card/50 backdrop-blur-sm shadow-xl shadow-primary/10">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden bg-card shadow-xl shadow-primary/10">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
@@ -154,7 +154,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl shadow-lg">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
@@ -187,7 +187,7 @@ export default function PortfolioPage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-card/50 backdrop-blur-sm rounded-lg">
+                <Card className="overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1 h-full flex flex-col bg-card rounded-lg">
                     <div className="relative w-full h-48">
                         <Image
                         src={project.imageUrl}
@@ -248,7 +248,7 @@ export default function PortfolioPage() {
           </h2>
           <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id} className="bg-card/50 backdrop-blur-sm transition-all">
+              <Card key={edu.id} className="bg-card transition-all">
                 <CardHeader>
                   <CardTitle>{edu.institution}</CardTitle>
                   <CardDescription>{edu.degree}</CardDescription>
