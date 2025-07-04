@@ -2,6 +2,10 @@
 "use client";
 
 import { useState, useEffect, useTransition } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { PlusCircle, Trash2, ArrowLeft, Wand2, Loader2 } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,9 +14,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
 import { generateSummaryAction } from './actions';
-import { PlusCircle, Trash2, ArrowLeft, Wand2, Loader2 } from 'lucide-react';
 import { PortfolioData, Project, Experience, Education, initialData } from '@/lib/data';
-import Link from 'next/link';
+
+const fileToDataUrl = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
 
 export default function AdminPage() {
   const [formData, setFormData] = useState<PortfolioData>(initialData);
@@ -44,6 +55,17 @@ export default function AdminPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      try {
+        const dataUrl = await fileToDataUrl(e.target.files[0]);
+        setFormData(prev => ({ ...prev, photoUrl: dataUrl }));
+      } catch (error) {
+        toast({ variant: 'destructive', title: 'Error reading file', description: 'Could not process the selected image.' });
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -96,11 +118,28 @@ export default function AdminPage() {
     });
   };
   
-  const handleListChange = <T extends { id: string }>(listName: keyof PortfolioData, index: number, field: keyof T, value: string | string[]) => {
-    const list = formData[listName] as T[];
-    const updatedList = list.map((item, i) => 
-        i === index ? { ...item, [field]: value } : item
-    );
+  const handleListFieldChange = async (listName: 'projects' | 'experiences' | 'educations', index: number, field: string, value: any) => {
+    const list = formData[listName] as any[];
+    const updatedList = [...list];
+    
+    if (listName === 'projects' && field === 'imageUrl') {
+        const e = value as React.ChangeEvent<HTMLInputElement>;
+        if (e.target.files && e.target.files[0]) {
+            try {
+                const dataUrl = await fileToDataUrl(e.target.files[0]);
+                updatedList[index] = { ...updatedList[index], [field]: dataUrl };
+            } catch (error) {
+                toast({ variant: 'destructive', title: 'Error reading file' });
+                return;
+            }
+        }
+    } else if (listName === 'projects' && field === 'tags') {
+         updatedList[index] = { ...updatedList[index], [field]: value.split(',').map((s:string) => s.trim()) };
+    } 
+    else {
+        updatedList[index] = { ...updatedList[index], [field]: value };
+    }
+
     setFormData(prev => ({ ...prev, [listName]: updatedList }));
   };
   
@@ -198,7 +237,15 @@ export default function AdminPage() {
               <CardContent className="space-y-4">
                 <div><Label htmlFor="name">Name</Label><Input id="name" name="name" value={formData.name} onChange={handleInputChange} /></div>
                 <div><Label htmlFor="title">Title / Tagline</Label><Input id="title" name="title" value={formData.title} onChange={handleInputChange} /></div>
-                <div><Label htmlFor="photoUrl">Photo URL</Label><Input id="photoUrl" name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} /></div>
+                <div>
+                  <Label htmlFor="photoUrl">Photo</Label>
+                  <Input id="photoUrl" name="photoUrl" type="file" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handlePhotoUpload} />
+                  {formData.photoUrl && (
+                    <div className="mt-4">
+                      <Image src={formData.photoUrl} alt="Profile preview" width={120} height={160} className="rounded-md object-cover" />
+                    </div>
+                  )}
+                </div>
                 <div><Label htmlFor="aboutMe">About Me</Label><Textarea id="aboutMe" name="aboutMe" value={formData.aboutMe} onChange={handleInputChange} rows={8} /></div>
                 <div>
                   <Label htmlFor="summary">AI Generated Summary</Label>
@@ -234,11 +281,19 @@ export default function AdminPage() {
                 {formData.projects.map((project, index) => (
                   <Card key={project.id} className="p-4 bg-muted/50">
                     <div className="space-y-4">
-                      <div><Label>Title</Label><Input value={project.title} onChange={(e) => handleListChange<Project>('projects', index, 'title', e.target.value)} /></div>
-                      <div><Label>Description</Label><Textarea value={project.description} onChange={(e) => handleListChange<Project>('projects', index, 'description', e.target.value)} /></div>
-                      <div><Label>Image URL</Label><Input value={project.imageUrl} onChange={(e) => handleListChange<Project>('projects', index, 'imageUrl', e.target.value)} /></div>
-                      <div><Label>Project Link</Label><Input value={project.link} onChange={(e) => handleListChange<Project>('projects', index, 'link', e.target.value)} /></div>
-                      <div><Label>Tags (comma separated)</Label><Input value={project.tags.join(',')} onChange={(e) => handleListChange<Project>('projects', index, 'tags', e.target.value.split(','))} /></div>
+                      <div><Label>Title</Label><Input value={project.title} onChange={(e) => handleListFieldChange('projects', index, 'title', e.target.value)} /></div>
+                      <div><Label>Description</Label><Textarea value={project.description} onChange={(e) => handleListFieldChange('projects', index, 'description', e.target.value)} /></div>
+                      <div>
+                        <Label>Image</Label>
+                        <Input type="file" accept="image/png, image/jpeg, image/gif, image/webp" onChange={(e) => handleListFieldChange('projects', index, 'imageUrl', e)} />
+                        {project.imageUrl && (
+                            <div className="mt-4">
+                                <Image src={project.imageUrl} alt="Project preview" width={160} height={90} className="rounded-md object-cover" />
+                            </div>
+                        )}
+                      </div>
+                      <div><Label>Project Link</Label><Input value={project.link} onChange={(e) => handleListFieldChange('projects', index, 'link', e.target.value)} /></div>
+                      <div><Label>Tags (comma separated)</Label><Input value={project.tags.join(', ')} onChange={(e) => handleListFieldChange('projects', index, 'tags', e.target.value)} /></div>
                     </div>
                     <Button variant="destructive" size="sm" className="mt-4" onClick={() => removeListItem('projects', index)}>Remove Project</Button>
                   </Card>
@@ -255,9 +310,9 @@ export default function AdminPage() {
                     {formData.experiences.map((exp, index) => (
                         <Card key={exp.id} className="p-4 bg-muted/50">
                             <div className="space-y-4">
-                                <div><Label>Role</Label><Input value={exp.role} onChange={e => handleListChange<Experience>('experiences', index, 'role', e.target.value)} /></div>
-                                <div><Label>Company</Label><Input value={exp.company} onChange={e => handleListChange<Experience>('experiences', index, 'company', e.target.value)} /></div>
-                                <div><Label>Period</Label><Input value={exp.period} onChange={e => handleListChange<Experience>('experiences', index, 'period', e.target.value)} /></div>
+                                <div><Label>Role</Label><Input value={exp.role} onChange={e => handleListFieldChange('experiences', index, 'role', e.target.value)} /></div>
+                                <div><Label>Company</Label><Input value={exp.company} onChange={e => handleListFieldChange('experiences', index, 'company', e.target.value)} /></div>
+                                <div><Label>Period</Label><Input value={exp.period} onChange={e => handleListFieldChange('experiences', index, 'period', e.target.value)} /></div>
                                 <div className="space-y-2">
                                     <Label>Responsibilities</Label>
                                     {exp.responsibilities.map((resp, respIndex) => (
@@ -284,9 +339,9 @@ export default function AdminPage() {
                     {formData.educations.map((edu, index) => (
                         <Card key={edu.id} className="p-4 bg-muted/50">
                             <div className="space-y-4">
-                                <div><Label>Institution</Label><Input value={edu.institution} onChange={e => handleListChange<Education>('educations', index, 'institution', e.target.value)} /></div>
-                                <div><Label>Degree/Certificate</Label><Input value={edu.degree} onChange={e => handleListChange<Education>('educations', index, 'degree', e.target.value)} /></div>
-                                <div><Label>Period</Label><Input value={edu.period} onChange={e => handleListChange<Education>('educations', index, 'period', e.target.value)} /></div>
+                                <div><Label>Institution</Label><Input value={edu.institution} onChange={e => handleListFieldChange('educations', index, 'institution', e.target.value)} /></div>
+                                <div><Label>Degree/Certificate</Label><Input value={edu.degree} onChange={e => handleListFieldChange('educations', index, 'degree', e.target.value)} /></div>
+                                <div><Label>Period</Label><Input value={edu.period} onChange={e => handleListFieldChange('educations', index, 'period', e.target.value)} /></div>
                             </div>
                             <Button variant="destructive" size="sm" className="mt-4" onClick={() => removeListItem('educations', index)}>Remove Education</Button>
                         </Card>
