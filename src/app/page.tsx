@@ -130,22 +130,22 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden">
+            <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
                 alt={name}
                 fill
-                style={{objectFit: "cover"}}
+                className="object-cover"
                 priority
                 data-ai-hint="professional photo"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 512px"
               />
             </div>
-            <div className="bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl flex flex-col justify-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white">{name}</h1>
+            <div className="bg-gray-900 p-8 lg:p-12 flex flex-col justify-center">
+              <h1 className="text-4xl sm:text-5xl font-bold text-white">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
-              <p className="mt-6 max-w-2xl text-lg text-gray-300 leading-relaxed">{summary}</p>
+              <p className="mt-6 text-lg text-gray-300 leading-relaxed">{summary}</p>
             </div>
           </div>
         </motion.section>
