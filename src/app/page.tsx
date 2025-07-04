@@ -125,12 +125,12 @@ export default function PortfolioPage() {
       <main className="container mx-auto px-4 md:px-6 py-12">
         <motion.section 
           id="hero"
-          className="my-12 md:my-24"
+          className="my-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
