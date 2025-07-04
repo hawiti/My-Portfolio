@@ -131,7 +131,7 @@ export default function PortfolioPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12">
             <div className="md:col-span-1 lg:col-span-2">
               <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
                 <Image
@@ -145,7 +145,7 @@ export default function PortfolioPage() {
                 />
               </div>
             </div>
-            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl">
+            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl flex flex-col justify-center">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
               <p className="mt-6 max-w-2xl text-lg text-gray-300 leading-relaxed">{summary}</p>
