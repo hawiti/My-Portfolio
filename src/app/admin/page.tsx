@@ -246,10 +246,10 @@ export default function AdminPage() {
                     </div>
                   )}
                 </div>
-                <div><Label htmlFor="aboutMe">About Me</Label><Textarea id="aboutMe" name="aboutMe" value={formData.aboutMe} onChange={handleInputChange} rows={10} /></div>
+                <div><Label htmlFor="aboutMe">About Me</Label><Textarea id="aboutMe" name="aboutMe" value={formData.aboutMe} onChange={handleInputChange} rows={15} /></div>
                 <div>
                   <Label htmlFor="summary">AI Generated Summary</Label>
-                  <Textarea id="summary" name="summary" value={formData.summary} onChange={handleInputChange} rows={6} />
+                  <Textarea id="summary" name="summary" value={formData.summary} onChange={handleInputChange} rows={10} />
                   <Button onClick={handleGenerateSummary} disabled={isAiPending} variant="outline" size="sm" className="mt-2">
                     {isAiPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                     {isAiPending ? 'Generating...' : 'Generate with AI'}

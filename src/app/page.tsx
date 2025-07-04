@@ -127,24 +127,24 @@ export default function PortfolioPage() {
       <main className="container mx-auto px-4 md:px-6">
         <motion.section 
           id="hero"
-          className="my-16"
+          className="my-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2">
             <div className="relative aspect-[3/4] md:aspect-auto">
               <Image
                 src={photoUrl}
                 alt={name}
                 fill
-                className="object-cover rounded-l-2xl"
+                className="object-cover rounded-lg"
                 priority
                 data-ai-hint="professional photo"
                 sizes="(max-width: 768px) 100vw, 512px"
               />
             </div>
-            <div className="p-8 lg:p-12 flex flex-col justify-center bg-card rounded-r-2xl">
+            <div className="p-8 lg:p-12 flex flex-col justify-center">
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground">{name}</h1>
               <p className="text-xl md:text-2xl mt-4 text-primary font-light">{title}</p>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{summary}</p>
@@ -156,7 +156,7 @@ export default function PortfolioPage() {
           <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
             <User className="text-primary w-8 h-8" /> About Me
           </h2>
-          <Card className="dark p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
+          <Card className="p-6 md:p-8 max-w-4xl mx-auto bg-card rounded-2xl shadow-lg">
             <CardContent>
               <p className="text-lg leading-relaxed whitespace-pre-wrap text-center md:text-left">{aboutMe}</p>
             </CardContent>
@@ -250,7 +250,7 @@ export default function PortfolioPage() {
           </h2>
           <div className="space-y-8 max-w-3xl mx-auto">
             {educations.map((edu) => (
-              <Card key={edu.id} className="dark bg-card transition-all">
+              <Card key={edu.id} className="bg-card transition-all">
                 <CardHeader>
                   <CardTitle className="text-card-foreground">{edu.institution}</CardTitle>
                   <CardDescription className="text-muted-foreground">{edu.degree}</CardDescription>
