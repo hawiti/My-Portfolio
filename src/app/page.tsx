@@ -145,10 +145,10 @@ export default function PortfolioPage() {
                 />
               </div>
             </div>
-            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary">{name}</h1>
-              <p className="text-xl md:text-2xl mt-4 text-muted-foreground font-light">{title}</p>
-              <p className="mt-6 max-w-2xl text-lg text-foreground/80 leading-relaxed">{summary}</p>
+            <div className="md:col-span-2 lg:col-span-3 text-center md:text-left bg-gray-900 p-8 lg:p-12 rounded-2xl shadow-2xl">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white">{name}</h1>
+              <p className="text-xl md:text-2xl mt-4 text-accent font-light">{title}</p>
+              <p className="mt-6 max-w-2xl text-lg text-gray-300 leading-relaxed">{summary}</p>
             </div>
           </div>
         </motion.section>
