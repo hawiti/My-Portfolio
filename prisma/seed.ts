@@ -9,11 +9,7 @@ async function main() {
   // Use a transaction to ensure all or nothing is written
   await db.$transaction(async (prisma) => {
     // Clean up existing data to make seeding idempotent
-    // The cascade delete is not set up, so we delete from child to parent
-    await prisma.skill.deleteMany({ where: { portfolioId: 1 } });
-    await prisma.project.deleteMany({ where: { portfolioId: 1 } });
-    await prisma.experience.deleteMany({ where: { portfolioId: 1 } });
-    await prisma.education.deleteMany({ where: { portfolioId: 1 } });
+    // With cascade deletes enabled in the schema, we only need to delete the portfolio
     await prisma.portfolio.deleteMany({ where: { id: 1 } });
 
     // Create the portfolio

@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,21 +11,21 @@ datasource db {
 }
 
 model Portfolio {
-  id          Int      @id @default(1)
-  name        String
-  photoUrl    String
-  title       String
-  aboutMe     String   @db.Text
-  summary     String   @db.Text
-  email       String?
-  phone       String?
-  linkedinUrl String?
-  githubUrl   String?
+  id           Int          @id @default(1)
+  name         String
+  photoUrl     String
+  title        String
+  aboutMe      String       @db.Text
+  summary      String       @db.Text
+  email        String?
+  phone        String?
+  linkedinUrl  String?
+  githubUrl    String?
 
-  skills      Skill[]
-  projects    Project[]
-  experiences Experience[]
-  educations  Education[]
+  skills       Skill[]
+  projects     Project[]
+  experiences  Experience[]
+  educations   Education[]
 }
 
 model Skill {
@@ -33,28 +36,28 @@ model Skill {
 }
 
 model Project {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
-  description String    @db.Text
+  description String   @db.Text
   imageUrl    String
-  link        String
+  link        String?
   tags        String[]
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   portfolioId Int
 }
 
 model Experience {
-  id               Int       @id @default(autoincrement())
-  role             String
-  company          String
-  period           String
+  id              Int      @id @default(autoincrement())
+  role            String
+  company         String
+  period          String
   responsibilities String[]
-  portfolio        Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-  portfolioId      Int
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolioId     Int
 }
 
 model Education {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   institution String
   degree      String
   period      String
