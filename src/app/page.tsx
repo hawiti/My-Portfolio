@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, Code, GraduationCap, LayoutGrid, User, Loader2 } from "lucide-react";
+import { ArrowRight, Briefcase, Code, GraduationCap, LayoutGrid, User, Loader2, Mail, Phone, Linkedin, Github, Send } from "lucide-react";
 import { PortfolioData } from "@/lib/data";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ function Header() {
                 <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
                 <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</a>
                 <a href="#education" className="text-muted-foreground hover:text-primary transition-colors">Education</a>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
+                <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
             </nav>
             </div>
         </div>
@@ -108,7 +108,7 @@ export default function PortfolioPage() {
     );
   }
 
-  const { name, photoUrl, title, summary, aboutMe, skills, projects, experiences, educations } = portfolioData;
+  const { name, photoUrl, title, summary, aboutMe, skills, projects, experiences, educations, contact } = portfolioData;
 
   return (
     <div className="bg-background text-foreground">
@@ -241,14 +241,59 @@ export default function PortfolioPage() {
             {educations.map((edu) => (
               <Card key={edu.id} className="bg-card transition-all">
                 <CardHeader>
-                  <CardTitle className="text-card-foreground">{edu.institution}</CardTitle>
-
+                  <CardTitle>{edu.institution}</CardTitle>
                   <CardDescription className="text-muted-foreground">{edu.degree}</CardDescription>
                   <p className="text-sm text-muted-foreground pt-2">{edu.period}</p>
                 </CardHeader>
               </Card>
             ))}
           </div>
+        </MotionSection>
+
+        <MotionSection id="contact">
+          <h2 className="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+            <Mail className="text-primary w-8 h-8" /> Contact Me
+          </h2>
+          <Card className="dark p-6 md:p-8 max-w-3xl mx-auto bg-card rounded-2xl">
+            <CardContent className="flex flex-col items-center text-center space-y-6 !pb-0">
+              <p className="text-lg text-muted-foreground">
+                I'm always open to discussing new projects, creative ideas, or opportunities.
+              </p>
+              {contact && (
+                  <div className="space-y-4 pt-4 text-card-foreground">
+                      {contact.email && (
+                          <a href={`mailto:${contact.email}`} className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Mail className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>{contact.email}</span>
+                          </a>
+                      )}
+                      {contact.phone && (
+                          <div className="flex items-center gap-4 text-lg">
+                              <Phone className="w-6 h-6 text-primary" />
+                              <span>{contact.phone}</span>
+                          </div>
+                      )}
+                      {contact.linkedinUrl && (
+                          <a href={contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Linkedin className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>LinkedIn Profile</span>
+                          </a>
+                      )}
+                      {contact.githubUrl && (
+                           <a href={contact.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
+                              <Github className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                              <span>GitHub Profile</span>
+                          </a>
+                      )}
+                  </div>
+              )}
+               <Button asChild size="lg">
+                <Link href="/contact">
+                  Send a Message <Send className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </MotionSection>
 
       </main>
