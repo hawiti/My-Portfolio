@@ -3,58 +3,16 @@
 import {NextResponse} from 'next/server';
 import {PortfolioData} from '@/lib/data';
 import { db } from '@/lib/db';
-import type { Portfolio, Project, Experience, Education, Skill } from '@prisma/client';
+import { getPortfolioData } from '@/lib/portfolio-service';
 import { revalidatePath } from 'next/cache';
-
-// Helper function to shape data for the frontend
-function shapePortfolioData(
-    portfolio: Portfolio & {
-        skills: Skill[];
-        projects: Project[];
-        experiences: Experience[];
-        educations: Education[];
-    }
-): PortfolioData {
-    return {
-        name: portfolio.name,
-        photoUrl: portfolio.photoUrl,
-        title: portfolio.title,
-        aboutMe: portfolio.aboutMe,
-        summary: portfolio.summary,
-        skills: portfolio.skills.map((s) => s.name),
-        // The frontend components use the `id` for keys, so we convert them back to strings
-        projects: portfolio.projects.map((p) => ({ ...p, id: p.id.toString() })),
-        experiences: portfolio.experiences.map((e) => ({ ...e, id: e.id.toString() })),
-        educations: portfolio.educations.map((e) => ({ ...e, id: e.id.toString() })),
-        contact: {
-            email: portfolio.email ?? '',
-            phone: portfolio.phone ?? '',
-            linkedinUrl: portfolio.linkedinUrl ?? '',
-            githubUrl: portfolio.githubUrl ?? '',
-        }
-    };
-}
-
 
 export async function GET() {
   try {
-    // We always look for the single portfolio record with ID 1, and include all its relations
-    const portfolioWithRelations = await db.portfolio.findUnique({
-        where: { id: 1 },
-        include: {
-            skills: { orderBy: { id: 'asc' } },
-            projects: { orderBy: { id: 'asc' } },
-            experiences: { orderBy: { id: 'asc' } },
-            educations: { orderBy: { id: 'asc' } },
-        }
-    });
+    const portfolioData = await getPortfolioData();
 
-    if (!portfolioWithRelations) {
+    if (!portfolioData) {
         return NextResponse.json({message: 'Portfolio not found. Please seed the database.'}, {status: 404});
     }
-
-    // Shape the data to match the PortfolioData interface expected by the frontend
-    const portfolioData = shapePortfolioData(portfolioWithRelations);
 
     return NextResponse.json(portfolioData);
   } catch (error) {
