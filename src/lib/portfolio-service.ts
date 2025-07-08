@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import type { PortfolioData } from '@/lib/data';
 import type { Portfolio, Project, Experience, Education, Skill } from '@prisma/client';
+import { unstable_noStore as noStore } from 'next/cache';
 
 // The single source of truth for shaping data from the database to the frontend format.
 function shapePortfolioData(
@@ -34,6 +35,10 @@ function shapePortfolioData(
 
 // The single source of truth for fetching portfolio data.
 export async function getPortfolioData(): Promise<PortfolioData | null> {
+    // Disable caching for this function to ensure fresh data is always fetched,
+    // especially after updates in the admin panel.
+    noStore();
+    
     try {
         const portfolioWithRelations = await db.portfolio.findUnique({
             where: { id: 1 },

@@ -98,9 +98,8 @@ export async function POST(request: Request) {
         }
     });
 
-    // Invalidate the cache for the home and contact pages
-    revalidatePath('/');
-    revalidatePath('/contact');
+    // Invalidate the cache for the entire site to ensure changes are reflected everywhere.
+    revalidatePath('/', 'layout');
         
     return NextResponse.json({message: 'Portfolio updated successfully'});
   } catch (error) {
