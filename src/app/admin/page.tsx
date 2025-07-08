@@ -230,8 +230,9 @@ export default function AdminPage() {
         </header>
         
         <Tabs defaultValue="profile">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="contact">Contact</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="experience">Experience</TabsTrigger>
             <TabsTrigger value="education">Education</TabsTrigger>
@@ -256,20 +257,6 @@ export default function AdminPage() {
                     </div>
                   )}
                 </div>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Contact Details</CardTitle>
-                        <CardDescription>Add your professional contact information.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div><Label htmlFor="email">Email</Label><Input id="email" name="email" value={formData.contact?.email ?? ''} onChange={handleInputChange} /></div>
-                        <div><Label htmlFor="phone">Phone</Label><Input id="phone" name="phone" value={formData.contact?.phone ?? ''} onChange={handleInputChange} /></div>
-                        <div><Label htmlFor="linkedinUrl">LinkedIn URL</Label><Input id="linkedinUrl" name="linkedinUrl" value={formData.contact?.linkedinUrl ?? ''} onChange={handleInputChange} /></div>
-                        <div><Label htmlFor="githubUrl">GitHub URL</Label><Input id="githubUrl" name="githubUrl" value={formData.contact?.githubUrl ?? ''} onChange={handleInputChange} /></div>
-                    </CardContent>
-                </Card>
-
                 <div><Label htmlFor="aboutMe">About Me</Label><Textarea id="aboutMe" name="aboutMe" value={formData.aboutMe} onChange={handleInputChange} rows={15} /></div>
                 <div>
                   <Label htmlFor="summary">AI Generated Summary</Label>
@@ -280,6 +267,21 @@ export default function AdminPage() {
                   </Button>
                 </div>
               </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="contact">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Contact Details</CardTitle>
+                    <CardDescription>Add your professional contact information.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div><Label htmlFor="email">Email</Label><Input id="email" name="email" value={formData.contact?.email ?? ''} onChange={handleInputChange} /></div>
+                    <div><Label htmlFor="phone">Phone</Label><Input id="phone" name="phone" value={formData.contact?.phone ?? ''} onChange={handleInputChange} /></div>
+                    <div><Label htmlFor="linkedinUrl">LinkedIn URL</Label><Input id="linkedinUrl" name="linkedinUrl" value={formData.contact?.linkedinUrl ?? ''} onChange={handleInputChange} /></div>
+                    <div><Label htmlFor="githubUrl">GitHub URL</Label><Input id="githubUrl" name="githubUrl" value={formData.contact?.githubUrl ?? ''} onChange={handleInputChange} /></div>
+                </CardContent>
             </Card>
           </TabsContent>
 
