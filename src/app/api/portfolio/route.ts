@@ -4,6 +4,7 @@ import {NextResponse} from 'next/server';
 import {PortfolioData} from '@/lib/data';
 import { db } from '@/lib/db';
 import type { Portfolio, Project, Experience, Education, Skill } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 // Helper function to shape data for the frontend
 function shapePortfolioData(
@@ -138,6 +139,10 @@ export async function POST(request: Request) {
             });
         }
     });
+
+    // Invalidate the cache for the home and contact pages
+    revalidatePath('/');
+    revalidatePath('/contact');
         
     return NextResponse.json({message: 'Portfolio updated successfully'});
   } catch (error) {

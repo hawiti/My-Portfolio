@@ -1,156 +1,61 @@
-'use client';
+import { db } from '@/lib/db';
+import type { PortfolioData } from '@/lib/data';
+import ContactClientPage from './contact-client';
+import type { Portfolio, Project, Experience, Education, Skill } from '@prisma/client';
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, Send, Mail, Phone, Linkedin, Github } from 'lucide-react';
-import Link from 'next/link';
-import { contactAction } from './actions';
-import { useEffect, useState } from 'react';
-import { PortfolioData } from '@/lib/data';
-
-const initialState = {
-  message: '',
-  success: false,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full" aria-disabled={pending}>
-      {pending ? 'Sending...' : <><Send className="mr-2" /> Send Message</>}
-    </Button>
-  );
+// Helper function to shape data for the frontend
+function shapeData(
+    portfolio: Portfolio & {
+        skills: Skill[];
+        projects: Project[];
+        experiences: Experience[];
+        educations: Education[];
+    }
+): PortfolioData {
+    return {
+        name: portfolio.name,
+        photoUrl: portfolio.photoUrl,
+        title: portfolio.title,
+        aboutMe: portfolio.aboutMe,
+        summary: portfolio.summary,
+        skills: portfolio.skills.map((s) => s.name),
+        projects: portfolio.projects.map((p) => ({ ...p, id: p.id.toString() })),
+        experiences: portfolio.experiences.map((e) => ({ ...e, id: e.id.toString() })),
+        educations: portfolio.educations.map((e) => ({ ...e, id: e.id.toString() })),
+        contact: {
+            email: portfolio.email ?? '',
+            phone: portfolio.phone ?? '',
+            linkedinUrl: portfolio.linkedinUrl ?? '',
+            githubUrl: portfolio.githubUrl ?? '',
+        }
+    };
 }
 
-function Header() {
-  return (
-    <div className="dark">
-        <header className="bg-background/70 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-            <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-primary rounded-full group-hover:scale-110 transition-transform" />
-            <span className="font-bold text-xl text-foreground">VerdantView</span>
-            </Link>
-            <div className="flex items-center gap-4">
-            <nav className="hidden md:flex gap-6 text-sm font-medium">
-                <Link href="/#about" className="text-muted-foreground hover:text-primary transition-colors">About</Link>
-                <Link href="/#projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</Link>
-                <Link href="/#experience" className="text-muted-foreground hover:text-primary transition-colors">Experience</Link>
-                <Link href="/#education" className="text-muted-foreground hover:text-primary transition-colors">Education</Link>
-                <Link href="/contact" className="text-primary hover:text-primary transition-colors">Contact</Link>
-            </nav>
-            </div>
-        </div>
-        </header>
-    </div>
-  );
-}
-
-export default function ContactPage() {
-  const [state, formAction] = useActionState(contactAction, initialState);
-  const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
-
-  useEffect(() => {
-    async function getPortfolioData(): Promise<PortfolioData | null> {
-        try {
-            const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
-            const res = await fetch(`${appUrl}/api/portfolio`, {
-                cache: 'no-store',
-            });
-            if (!res.ok) {
-                console.error("Failed to fetch portfolio data, status:", res.status, await res.text());
-                return null;
+async function getPortfolioDataForPage(): Promise<PortfolioData | null> {
+    try {
+        const portfolioWithRelations = await db.portfolio.findUnique({
+            where: { id: 1 },
+            include: {
+                skills: { orderBy: { id: 'asc' } },
+                projects: { orderBy: { id: 'asc' } },
+                experiences: { orderBy: { id: 'asc' } },
+                educations: { orderBy: { id: 'asc' } },
             }
-            return res.json();
-        } catch (error) {
-            console.error("Error fetching portfolio data:", error);
+        });
+
+        if (!portfolioWithRelations) {
+            console.error("Portfolio with ID 1 not found. Please seed the database.");
             return null;
         }
-    }
-    getPortfolioData().then(data => setPortfolioData(data));
-  }, []);
 
-  return (
-    <div className="bg-background text-foreground min-h-screen">
-      <Header />
-      <main className="container mx-auto px-4 md:px-6 py-12 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
-          <div className="space-y-6">
-              <h1 className="text-4xl font-bold">Get In Touch</h1>
-              <p className="text-muted-foreground text-lg">
-                  I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Fill out the form, or reach out to me directly through the channels below.
-              </p>
-              {portfolioData?.contact && (
-                  <div className="space-y-4 pt-4">
-                      {portfolioData.contact.email && (
-                          <a href={`mailto:${portfolioData.contact.email}`} className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
-                              <Mail className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-                              <span>{portfolioData.contact.email}</span>
-                          </a>
-                      )}
-                      {portfolioData.contact.phone && (
-                          <div className="flex items-center gap-4 text-lg">
-                              <Phone className="w-6 h-6 text-primary" />
-                              <span>{portfolioData.contact.phone}</span>
-                          </div>
-                      )}
-                      {portfolioData.contact.linkedinUrl && (
-                          <a href={portfolioData.contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
-                              <Linkedin className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-                              <span>LinkedIn Profile</span>
-                          </a>
-                      )}
-                      {portfolioData.contact.githubUrl && (
-                           <a href={portfolioData.contact.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg hover:text-primary transition-colors group">
-                              <Github className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-                              <span>GitHub Profile</span>
-                          </a>
-                      )}
-                  </div>
-              )}
-          </div>
-          <Card className="w-full bg-card">
-            <CardHeader>
-              <CardTitle className="text-3xl">Send a Message</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {state.success ? (
-                <Alert>
-                  <CheckCircle className="h-4 w-4" />
-                  <AlertTitle>Message Sent!</AlertTitle>
-                  <AlertDescription>
-                    {state.message}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <form action={formAction} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" name="name" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" name="email" type="email" required />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea id="message" name="message" required rows={6} />
-                  </div>
-                  <SubmitButton />
-                </form>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
-  );
+        return shapeData(portfolioWithRelations);
+    } catch (error) {
+        console.error("Error fetching portfolio directly from database:", error);
+        return null;
+    }
+}
+
+export default async function ContactPage() {
+  const portfolioData = await getPortfolioDataForPage();
+  return <ContactClientPage portfolioData={portfolioData} />;
 }
