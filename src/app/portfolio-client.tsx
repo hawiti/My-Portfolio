@@ -215,7 +215,7 @@ export default function PortfolioClientComponent({ portfolioData }: { portfolioD
             <Mail className="text-primary w-8 h-8" /> Contact Me
           </h2>
           <Card className="dark p-6 md:p-8 max-w-3xl mx-auto bg-card rounded-2xl">
-            <CardContent className="flex flex-col items-center text-center space-y-6 !pb-0">
+            <CardContent className="flex flex-col items-start text-left space-y-6 !pb-0">
               <p className="text-lg text-muted-foreground">
                 I'm always open to discussing new projects, creative ideas, or opportunities.
               </p>
