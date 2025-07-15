@@ -11,7 +11,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "db:push": "dotenv -e .env -- prisma db push",
-    "db:seed": "prisma db seed",
+    "db:seed": "dotenv -e .env -- prisma db seed",
     "postinstall": "prisma generate"
   },
   "dependencies": {

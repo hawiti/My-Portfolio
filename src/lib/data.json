@@ -92,5 +92,11 @@
       "degree": "Full-Stack Web Development Bootcamp",
       "period": "2018"
     }
-  ]
+  ],
+  "contact": {
+    "email": "alex.doe@example.com",
+    "phone": "+1 123-456-7890",
+    "linkedinUrl": "https://linkedin.com/in/alex-doe",
+    "githubUrl": "https://github.com/alex-doe"
+  }
 }
